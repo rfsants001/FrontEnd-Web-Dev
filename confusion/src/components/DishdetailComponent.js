@@ -14,6 +14,7 @@ import { Card,
         Row } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
+import { FadeTransform, Fade, Stagger} from 'react-animation-components'
 
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
@@ -141,20 +142,24 @@ class CommentForm extends Component {
             return(
                 <div className="container">
                         <h4>Comments</h4>
-                        {comments.map((com) => {
-                            let date = new Intl.DateTimeFormat('en-US', {
-                                year:'numeric',
-                                month: 'short',
-                                day: '2-digit'
-                            }).format(new Date(Date.parse(com.date)))
-                            return(
-                                <ul className="list-unstyled" key={com.id}>
-                                    <li className="comment">{com.comment}</li>
-                                    <br/>
-                                    <li className="author">-- {com.author}, {date}</li>
-                                </ul>
-                            )
-                            })}
+                        <Stagger in>
+                            {comments.map((com) => {
+                                let date = new Intl.DateTimeFormat('en-US', {
+                                    year:'numeric',
+                                    month: 'short',
+                                    day: '2-digit'
+                                }).format(new Date(Date.parse(com.date)))
+                                return(
+                                    <ul className="list-unstyled" key={com.id}>
+                                            <Fade in>
+                                                <li className="comment">{com.comment}</li>
+                                                <br/>
+                                                <li className="author">-- {com.author}, {date}</li>
+                                            </Fade>
+                                    </ul>
+                                )
+                                })}
+                            </Stagger>
                             <CommentForm dishId={dishId} postComment={postComment}/>
                 </div>
             )
@@ -208,7 +213,11 @@ class CommentForm extends Component {
                             <hr/>
                         </div>
                         <div className="col-12 col-md-5 m-1">
-                            <RenderDish dish={dish} />
+                            <FadeTransform in transformProps={{
+                                exitTransform: 'scale(0.5) translateY(-50%)'
+                            }}>
+                                <RenderDish dish={dish} />
+                            </FadeTransform>
                         </div>
                         <div className="col-12 col-md-5 m-1">
                             <RenderComments 
